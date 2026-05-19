@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f6f0e3;
+  --bg2: #ede5cf;
+  --bg3: #e4dbbf;
+  --green: #0f3d2e;
+  --green2: #0c2a1d;
+  --green3: #071e10;
+  --lime: #d4ff3f;
+  --mint: #6bff95;
+  --text: #1a2b1e;
+  --sub: #3c5443;
+  --muted: #678070;
+  --faint: #9aaf9f;
+  --card: #fdfaf0;
+  --border: rgba(26, 43, 30, 0.09);
+  --border2: rgba(26, 43, 30, 0.16);
+  --shadow: 0 4px 20px rgba(15, 61, 46, 0.09);
+  --shadow2: 0 16px 56px rgba(15, 61, 46, 0.16);
+  /* Fluid horizontal padding — responsive replacement for the prototype's fixed 100px */
+  --px: clamp(20px, 5vw, 100px);
+  --r: 14px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.font-display {
+  font-family: var(--font-display), "Space Grotesk", sans-serif;
+}
+.font-body {
+  font-family: var(--font-body), "DM Sans", sans-serif;
+}
+
+.dot-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(15, 61, 46, 0.045) 1px,
+    transparent 1px
+  );
+  background-size: 38px 38px;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: perspective(1400px) rotateY(-6deg) rotateX(3deg) translateY(0);
+  }
+  50% {
+    transform: perspective(1400px) rotateY(-6deg) rotateX(3deg)
+      translateY(-10px);
+  }
+}
+@keyframes pulse-g {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(107, 255, 149, 0.5);
+  }
+  60% {
+    box-shadow: 0 0 0 7px rgba(107, 255, 149, 0);
+  }
+}
+@keyframes bar-grow {
+  from {
+    width: 0 !important;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mockup-card {
+  animation: float-y 7s ease-in-out infinite;
+}
+@media (max-width: 1023px) {
+  .mockup-card {
+    animation: none;
+    transform: none;
+  }
+}
+.live-dot {
+  animation: pulse-g 2.2s ease-in-out infinite;
+}
+.bar-anim {
+  animation: bar-grow 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hov {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.hov:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow2);
+}
+
+.nl {
+  transition: color 0.18s;
+}
+.nl:hover {
+  color: var(--text) !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 61, 46, 0.2);
+  border-radius: 3px;
+}
+
+.section-px {
+  padding-left: var(--px);
+  padding-right: var(--px);
+}
+
+/* Fluid hero typography — responsive replacement for the prototype's 96px lines */
+.hero-line {
+  font-size: clamp(40px, 9vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  display: block;
+}
+
+.section-h2 {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.07;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
