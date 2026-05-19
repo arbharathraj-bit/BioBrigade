@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { APP_SUBDOMAINS, extractSubdomain } from "@/lib/subdomains";
 import { updateSession } from "@/lib/supabase/middleware";
+import { SUPABASE_CONFIGURED } from "@/lib/env";
 
 export async function middleware(req: NextRequest) {
   const host = req.headers.get("host");
   const sub = extractSubdomain(host);
   const url = req.nextUrl.clone();
 
-  // Only do a subdomain rewrite when the path hasn't already been rewritten
-  // and the requested path looks like a marketing path (not /auth, /api, etc).
   const isSystemPath =
     url.pathname.startsWith("/api") ||
     url.pathname.startsWith("/auth") ||
@@ -23,10 +22,12 @@ export async function middleware(req: NextRequest) {
     res = NextResponse.next();
   }
 
-  // Refresh Supabase session cookies on every request so shared auth on
-  // *.<ROOT_DOMAIN> stays valid.
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
-    await updateSession(req, res);
+  if (SUPABASE_CONFIGURED) {
+    try {
+      return await updateSession(req, res);
+    } catch {
+      return res;
+    }
   }
   return res;
 }

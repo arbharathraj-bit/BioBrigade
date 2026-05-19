@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, supabaseConfigured } from "@/lib/supabase/client";
 
 type Mode = "signin" | "signup";
 
@@ -15,48 +15,63 @@ export function AuthForm({ mode }: { mode: Mode }) {
   );
   const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient();
   const callbackURL = () => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const params = new URLSearchParams();
-    if (next) params.set("next", next);
-    const q = params.toString();
+    const sp = new URLSearchParams();
+    if (next) sp.set("next", next);
+    const q = sp.toString();
     return `${origin}/auth/callback${q ? `?${q}` : ""}`;
   };
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
+    if (!supabaseConfigured) {
+      setError("Authentication is not yet configured for this environment.");
+      setStatus("error");
+      return;
+    }
     setStatus("loading");
     setError(null);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: callbackURL(),
-        shouldCreateUser: mode === "signup",
-      },
-    });
-    if (error) {
-      setError(error.message);
-      setStatus("error");
-    } else {
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: callbackURL(),
+          shouldCreateUser: mode === "signup",
+        },
+      });
+      if (error) throw error;
       setStatus("sent");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setStatus("error");
     }
   }
 
   async function handleGoogle() {
+    if (!supabaseConfigured) {
+      setError("Authentication is not yet configured for this environment.");
+      setStatus("error");
+      return;
+    }
     setStatus("loading");
     setError(null);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: callbackURL() },
-    });
-    if (error) {
-      setError(error.message);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: callbackURL() },
+      });
+      if (error) throw error;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
       setStatus("error");
     }
   }
 
   const cta = mode === "signup" ? "Create account" : "Continue with email";
+  const disabled = status === "loading" || !supabaseConfigured;
 
   return (
     <form
@@ -68,6 +83,24 @@ export function AuthForm({ mode }: { mode: Mode }) {
         width: "100%",
       }}
     >
+      {!supabaseConfigured && (
+        <div
+          role="status"
+          style={{
+            padding: "12px 14px",
+            borderRadius: "10px",
+            background: "rgba(15,61,46,0.06)",
+            border: "1px solid var(--border)",
+            color: "var(--sub)",
+            fontSize: "13px",
+            lineHeight: 1.55,
+          }}
+        >
+          Authentication is not yet wired up for this deployment. The
+          BioBrigade team will enable sign-in shortly.
+        </div>
+      )}
+
       <label
         htmlFor="email"
         style={{
@@ -101,7 +134,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
       <button
         type="submit"
-        disabled={status === "loading"}
+        disabled={disabled}
         style={{
           padding: "14px 20px",
           background: "var(--green)",
@@ -111,7 +144,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
           fontWeight: 600,
           letterSpacing: "0.04em",
           border: "none",
-          cursor: status === "loading" ? "wait" : "pointer",
+          cursor: disabled ? "not-allowed" : "pointer",
+          opacity: disabled ? 0.7 : 1,
         }}
       >
         {status === "loading" ? "Working…" : cta + " →"}
@@ -135,7 +169,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       <button
         type="button"
         onClick={handleGoogle}
-        disabled={status === "loading"}
+        disabled={disabled}
         style={{
           padding: "12px 18px",
           background: "var(--card)",
@@ -144,7 +178,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
           fontSize: "14px",
           fontWeight: 600,
           border: "1.5px solid var(--border2)",
-          cursor: status === "loading" ? "wait" : "pointer",
+          cursor: disabled ? "not-allowed" : "pointer",
+          opacity: disabled ? 0.7 : 1,
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",

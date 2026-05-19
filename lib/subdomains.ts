@@ -1,3 +1,7 @@
+import { ROOT_DOMAIN } from "./env";
+
+export { ROOT_DOMAIN };
+
 export type AppSubdomain = {
   slug: string;
   name: string;
@@ -83,16 +87,16 @@ export const APP_SUBDOMAINS: Record<string, AppSubdomain> = {
   },
 };
 
-export const ROOT_DOMAIN =
-  process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "biobrigade.com";
-
-export function extractSubdomain(host: string | null | undefined): string | null {
+export function extractSubdomain(
+  host: string | null | undefined,
+): string | null {
   if (!host) return null;
   const hostname = host.split(":")[0].toLowerCase();
   if (hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
     return null;
   }
-  // Vercel preview deployments like proj-git-branch-team.vercel.app — treat as apex.
+  // Vercel preview deployments serve every branch on a `*.vercel.app`
+  // hostname — treat those as the apex marketing site.
   if (hostname.endsWith(".vercel.app")) return null;
 
   const root = ROOT_DOMAIN.toLowerCase();
@@ -100,8 +104,12 @@ export function extractSubdomain(host: string | null | undefined): string | null
   if (hostname.endsWith(`.${root}`)) {
     return hostname.slice(0, -1 - root.length);
   }
-  // Fallback: anything before the first dot if there are >= 3 segments.
+  // Fallback: anything before the first dot when there are ≥ 3 segments
+  // and the trailing TLD looks plausible. We keep this conservative so we
+  // don't accidentally rewrite custom domains to a stub page.
   const parts = hostname.split(".");
-  if (parts.length >= 3) return parts[0];
+  if (parts.length >= 3 && parts[parts.length - 1].length >= 2) {
+    return parts[0];
+  }
   return null;
 }

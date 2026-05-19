@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { APP_SUBDOMAINS } from "@/lib/subdomains";
 import { createClient } from "@/lib/supabase/server";
+import { SUPABASE_CONFIGURED } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
@@ -14,10 +15,16 @@ export default async function AppEntry({
   const app = APP_SUBDOMAINS[params.slug];
   if (!app) notFound();
 
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: { email?: string | null } | null = null;
+  if (SUPABASE_CONFIGURED) {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
+      user = data.user;
+    } catch {
+      user = null;
+    }
+  }
 
   return (
     <main

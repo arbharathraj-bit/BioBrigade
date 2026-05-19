@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, DM_Sans } from "next/font/google";
+import { siteUrl } from "@/lib/env";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -16,10 +17,10 @@ const body = DM_Sans({
   display: "swap",
 });
 
-const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "biobrigade.com";
+const site = siteUrl();
 
 export const metadata: Metadata = {
-  metadataBase: new URL(`https://${rootDomain}`),
+  metadataBase: new URL(site),
   title: {
     default: "BioBrigade — One platform. Eleven frontiers of biology.",
     template: "%s · BioBrigade",
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
     title: "BioBrigade — One platform. Eleven frontiers of biology.",
     description:
       "An AI-powered computational platform for research labs, hospitals and biotech teams.",
-    url: `https://${rootDomain}`,
+    url: site,
   },
   twitter: {
     card: "summary_large_image",
@@ -69,9 +70,9 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "BioBrigade",
-    url: `https://${rootDomain}`,
-    logo: `https://${rootDomain}/biobrigade-logo.jpg`,
-    sameAs: [`https://${rootDomain}`],
+    url: site,
+    logo: `${site}/biobrigade-logo.jpg`,
+    sameAs: [site],
     description:
       "The computational operating system for modern biotechnology.",
   };

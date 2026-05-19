@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { ROOT_DOMAIN } from "@/lib/subdomains";
+import { siteUrl } from "@/lib/env";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = `https://${ROOT_DOMAIN}`;
+  const base = siteUrl();
   const now = new Date();
   return [
     { url: `${base}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },

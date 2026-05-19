@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { ROOT_DOMAIN } from "@/lib/subdomains";
+import { siteUrl } from "@/lib/env";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [{ userAgent: "*", allow: "/", disallow: ["/auth/", "/apps/"] }],
-    sitemap: `https://${ROOT_DOMAIN}/sitemap.xml`,
+    sitemap: `${siteUrl()}/sitemap.xml`,
   };
 }
