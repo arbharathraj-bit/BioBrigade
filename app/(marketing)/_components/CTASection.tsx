@@ -145,24 +145,6 @@ export function CTASection() {
           >
             contact@biobrigade.in
           </a>
-          <a
-            href="https://biobrigade.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "15px 28px",
-              background: "transparent",
-              color: "var(--green)",
-              borderRadius: "10px",
-              fontSize: "15px",
-              fontWeight: 500,
-              border: "1.5px solid rgba(15,61,46,0.22)",
-            }}
-          >
-            biobrigade.in →
-          </a>
         </div>
       </div>
     </section>

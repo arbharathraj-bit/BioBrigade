@@ -174,44 +174,6 @@ export function Hero() {
             </Link>
           </div>
 
-          <div
-            className="flex flex-wrap"
-            style={{
-              gap: "36px",
-              paddingTop: "22px",
-              borderTop: "1px solid var(--border)",
-            }}
-          >
-            {[
-              ["11", "AI Verticals"],
-              ["$150B+", "Market Opp."],
-              ["< 1 hr", "Time to Insight"],
-            ].map(([v, l]) => (
-              <div key={v}>
-                <div
-                  className="font-display"
-                  style={{
-                    fontSize: "26px",
-                    fontWeight: 700,
-                    color: "var(--green)",
-                    lineHeight: 1,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  {v}
-                </div>
-                <div
-                  style={{
-                    fontSize: "12px",
-                    color: "var(--muted)",
-                    marginTop: "4px",
-                  }}
-                >
-                  {l}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div className="w-full lg:w-auto" style={{ flexShrink: 0 }}>

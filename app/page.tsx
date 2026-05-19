@@ -6,7 +6,6 @@ import { PlatformIntro } from "./(marketing)/_components/PlatformIntro";
 import { ProductsSection } from "./(marketing)/_components/ProductsSection";
 import { HowItWorksSection } from "./(marketing)/_components/HowItWorksSection";
 import { SolutionsSection } from "./(marketing)/_components/SolutionsSection";
-import { TechSection } from "./(marketing)/_components/TechSection";
 import { PricingSection } from "./(marketing)/_components/PricingSection";
 import { CTASection } from "./(marketing)/_components/CTASection";
 import { Footer } from "./(marketing)/_components/Footer";
@@ -23,7 +22,6 @@ export default function Page() {
         <ProductsSection />
         <HowItWorksSection />
         <SolutionsSection />
-        <TechSection />
         <PricingSection />
         <CTASection />
       </main>
